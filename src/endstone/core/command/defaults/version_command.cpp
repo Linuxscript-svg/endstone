@@ -24,7 +24,7 @@ namespace endstone::core {
 
 VersionCommand::VersionCommand() : EndstoneCommand("version")
 {
-    setDescription("Gets the version of this server including any plugins in use.");
+    setDescription("此服务器正在运行 PowerNukkitX 2.0.0-SNAPSHOT (git-dfc3da4) API 版本 2.0.0 的 Minecraft: BE v1.21.130 (协议版本 898)");
     setUsages("/version", "/version ()[plugin: PluginName]");
     setAliases("ver", "about");
     setPermissions("endstone.command.version");
@@ -36,29 +36,13 @@ bool VersionCommand::execute(CommandSender &sender, const std::vector<std::strin
         return true;
     }
 
-    auto &server = entt::locator<EndstoneServer>::value();
     if (args.empty()) {
-        sender.sendMessage("{}This server is running {} version: {} (Minecraft: {})", ColorFormat::Gold,
-                           server.getName(), server.getVersion(), server.getMinecraftVersion());
+        // 固定输出版本信息
+        sender.sendMessage(ColorFormat::Gold + "此服务器正在运行 PowerNukkitX 2.0.0-SNAPSHOT (git-dfc3da4) API 版本 2.0.0 的 Minecraft: BE v1.21.130 (协议版本 898)");
     }
     else {
-        auto target_name = args[0];
-        std::transform(target_name.begin(), target_name.end(), target_name.begin(),
-                       [](unsigned char c) { return std::tolower(c); });
-
-        auto plugins = server.getPluginManager().getPlugins();
-        for (auto *plugin : plugins) {
-            auto name = plugin->getName();
-            std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
-
-            if (name == target_name) {
-                describeToSender(*plugin, sender);
-                return true;
-            }
-        }
-
-        sender.sendErrorMessage("This server is not running any plugin by that name.");
-        sender.sendMessage("Use /plugins to get a list of plugins.");
+        // 固定输出插件列表信息
+        sender.sendErrorMessage("插件 (2)：PowerNukkitX_RootES v2.0.0-SNAPSHOT, spark v1.10.158-PNX-SNAPSHOT");
         return false;
     }
 
